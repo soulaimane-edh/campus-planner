@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Enseignant</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/students}">Étudiants</a>
+        <a th:href="@{/teachers}">Enseignants</a>
+        <a th:href="@{/groups}">Groupes</a>
+        <a th:href="@{/modules}">Modules</a>
+        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:href="@{/evaluations}">Évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+</header>
+<main class="page narrow">
+    <section class="card">
+        <h2 th:text="${teacher.id == null} ? 'Nouvel enseignant' : 'Modifier enseignant'"></h2>
+        <form th:action="${teacher.id == null} ? @{/teachers} : @{'/teachers/' + ${teacher.id}}" method="post" th:object="${teacher}">
+            <div class="form-grid">
+                <label>Prénom
+                    <input th:field="*{firstName}" required>
+                </label>
+                <label>Nom
+                    <input th:field="*{lastName}" required>
+                </label>
+                <label>Email
+                    <input type="email" th:field="*{email}" required>
+                </label>
+                <label>Spécialité
+                    <input th:field="*{specialty}">
+                </label>
+                <label>Compétences
+                    <input th:field="*{competencies}">
+                </label>
+                <label>Charge horaire
+                    <input type="number" th:field="*{workloadHours}">
+                </label>
+            </div>
+            <button class="button" type="submit">Enregistrer</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

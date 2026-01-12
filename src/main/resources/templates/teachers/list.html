@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Enseignants</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/students}">Étudiants</a>
+        <a th:href="@{/teachers}">Enseignants</a>
+        <a th:href="@{/groups}">Groupes</a>
+        <a th:href="@{/modules}">Modules</a>
+        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:href="@{/evaluations}">Évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+</header>
+<main class="page">
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Enseignants</p>
+                <h2>Responsables et compétences</h2>
+            </div>
+            <a class="button" th:href="@{/teachers/new}">Ajouter</a>
+        </div>
+        <table class="table">
+            <thead><tr><th>Nom</th><th>Email</th><th>Spécialité</th><th>Compétences</th><th>Charge</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="t : ${teachers}">
+                <td th:text="${t.lastName} + ' ' + ${t.firstName}"></td>
+                <td th:text="${t.email}"></td>
+                <td th:text="${t.specialty}"></td>
+                <td th:text="${t.competencies}"></td>
+                <td th:text="${t.workloadHours}"></td>
+                <td class="actions">
+                    <a th:href="@{'/teachers/' + ${t.id} + '/edit'}">Modifier</a>
+                    <form th:action="@{'/teachers/' + ${t.id} + '/delete'}" method="post">
+                        <button class="button ghost" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

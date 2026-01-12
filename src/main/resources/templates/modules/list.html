@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modules</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/students}">Étudiants</a>
+        <a th:href="@{/teachers}">Enseignants</a>
+        <a th:href="@{/groups}">Groupes</a>
+        <a th:href="@{/modules}">Modules</a>
+        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:href="@{/evaluations}">Évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+</header>
+<main class="page">
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Modules</p>
+                <h2>Modules et affectations</h2>
+            </div>
+            <a class="button" th:href="@{/modules/new}">Ajouter</a>
+        </div>
+        <table class="table">
+            <thead><tr><th>Code</th><th>Nom</th><th>Filière</th><th>Semestre</th><th>Responsable</th><th>Groupes</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="m : ${modules}">
+                <td th:text="${m.code}"></td>
+                <td th:text="${m.name}"></td>
+                <td th:text="${m.fieldOfStudy}"></td>
+                <td th:text="${m.semester}"></td>
+                <td><span class="tag" th:text="${m.responsibleTeacher != null ? m.responsibleTeacher.lastName : 'Responsable ?'}"></span></td>
+                <td>
+                    <span class="tag" th:each="g : ${m.groups}" th:text="${g.name}"></span>
+                </td>
+                <td class="actions">
+                    <a th:href="@{'/modules/' + ${m.id} + '/edit'}">Modifier</a>
+                    <form th:action="@{'/modules/' + ${m.id} + '/delete'}" method="post">
+                        <button class="button ghost" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

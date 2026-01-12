@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Groupes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/students}">Étudiants</a>
+        <a th:href="@{/teachers}">Enseignants</a>
+        <a th:href="@{/groups}">Groupes</a>
+        <a th:href="@{/modules}">Modules</a>
+        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:href="@{/evaluations}">Évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+</header>
+<main class="page">
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Groupes</p>
+                <h2>Groupes TD/TP</h2>
+            </div>
+            <a class="button" th:href="@{/groups/new}">Ajouter</a>
+        </div>
+        <table class="table">
+            <thead><tr><th>Nom</th><th>Niveau</th><th>Filière</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="g : ${groups}">
+                <td th:text="${g.name}"></td>
+                <td th:text="${g.level}"></td>
+                <td th:text="${g.fieldOfStudy}"></td>
+                <td class="actions">
+                    <a th:href="@{'/groups/' + ${g.id} + '/edit'}">Modifier</a>
+                    <form th:action="@{'/groups/' + ${g.id} + '/delete'}" method="post">
+                        <button class="button ghost" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

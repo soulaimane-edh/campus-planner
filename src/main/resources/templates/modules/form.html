@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Module</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/students}">Étudiants</a>
+        <a th:href="@{/teachers}">Enseignants</a>
+        <a th:href="@{/groups}">Groupes</a>
+        <a th:href="@{/modules}">Modules</a>
+        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:href="@{/evaluations}">Évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+</header>
+<main class="page narrow">
+    <section class="card">
+        <h2 th:text="${module.id == null} ? 'Nouveau module' : 'Modifier module'"></h2>
+        <form th:action="${module.id == null} ? @{/modules} : @{'/modules/' + ${module.id}}" method="post" th:object="${module}">
+            <div class="form-grid">
+                <label>Code
+                    <input th:field="*{code}" required>
+                </label>
+                <label>Nom
+                    <input th:field="*{name}" required>
+                </label>
+                <label>Filière
+                    <input th:field="*{fieldOfStudy}" required>
+                </label>
+                <label>Semestre
+                    <input th:field="*{semester}">
+                </label>
+                <label>Volume horaire
+                    <input type="number" th:field="*{volumeHours}">
+                </label>
+                <label>Compétences requises
+                    <input th:field="*{requiredCompetencies}">
+                </label>
+                <label>Responsable
+                    <select name="teacherId">
+                        <option value="">--</option>
+                        <option th:each="t : ${teachers}" th:value="${t.id}" th:selected="${module.responsibleTeacher != null and module.responsibleTeacher.id == t.id}" th:text="${t.lastName} + ' ' + ${t.firstName}"></option>
+                    </select>
+                </label>
+                <label>Groupes (Ctrl/Cmd + clic pour multi)
+                    <select multiple name="groupIds">
+                        <option th:each="g : ${groups}" th:value="${g.id}" th:selected="${module.groups.contains(g)}" th:text="${g.name} + ' ' + ${g.level}"></option>
+                    </select>
+                </label>
+            </div>
+            <button class="button" type="submit">Enregistrer</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

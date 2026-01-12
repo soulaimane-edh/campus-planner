@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Emploi du temps</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/students}">Étudiants</a>
+        <a th:href="@{/teachers}">Enseignants</a>
+        <a th:href="@{/groups}">Groupes</a>
+        <a th:href="@{/modules}">Modules</a>
+        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:href="@{/evaluations}">Évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+</header>
+<main class="page narrow">
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Planifier</p>
+                <h2>Nouvelle séance</h2>
+            </div>
+            <p class="muted">Détection automatique des conflits (salle, enseignant, groupe, module affecté).</p>
+        </div>
+        <div th:if="${error}" class="alert" th:text="${error}"></div>
+        <form th:action="@{/sessions}" method="post" th:object="${sessionRequest}">
+            <div class="form-grid">
+                <label>Module
+                    <select th:field="*{moduleId}" required>
+                        <option th:each="m : ${modules}" th:value="${m.id}" th:text="${m.code} + ' - ' + ${m.name}"></option>
+                    </select>
+                </label>
+                <label>Enseignant
+                    <select th:field="*{teacherId}" required>
+                        <option th:each="t : ${teachers}" th:value="${t.id}" th:text="${t.lastName} + ' ' + ${t.firstName}"></option>
+                    </select>
+                </label>
+                <label>Groupe
+                    <select th:field="*{groupId}" required>
+                        <option th:each="g : ${groups}" th:value="${g.id}" th:text="${g.name} + ' (' + ${g.level} + ')' "></option>
+                    </select>
+                </label>
+                <label>Salle
+                    <input th:field="*{room}" required placeholder="Salle A1">
+                </label>
+                <label>Type
+                    <input th:field="*{sessionType}" placeholder="CM/TD/TP">
+                </label>
+                <label>Début
+                    <input type="datetime-local" th:field="*{startTime}" required>
+                </label>
+                <label>Fin
+                    <input type="datetime-local" th:field="*{endTime}" required>
+                </label>
+            </div>
+            <button class="button" type="submit">Planifier</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Emploi du temps</p>
+                <h2>Séances programmées</h2>
+            </div>
+        </div>
+        <div class="timeline" th:if="${#lists.isEmpty(sessions)}">
+            <p class="muted">Aucune séance planifiée</p>
+        </div>
+        <div class="timeline" th:unless="${#lists.isEmpty(sessions)}">
+            <div class="timeline-row" th:each="s : ${sessions}">
+                <div class="time" th:text="${#temporals.format(s.startTime, 'dd/MM HH:mm')} + ' — ' + ${#temporals.format(s.endTime, 'HH:mm')}"></div>
+                <div class="timeline-card">
+                    <div class="title" th:text="${s.moduleCourse.name}"></div>
+                    <div class="muted" th:text="${s.moduleCourse.code} + ' • ' + ${s.sessionType}"></div>
+                    <div class="meta">
+                        <span class="tag" th:text="${s.teacher.lastName}"></span>
+                        <span class="tag" th:text="${s.groupClass.name}"></span>
+                        <span class="tag room" th:text="${s.room}"></span>
+                    </div>
+                    <form th:action="@{'/sessions/' + ${s.id} + '/delete'}" method="post">
+                        <button class="button ghost" type="submit">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

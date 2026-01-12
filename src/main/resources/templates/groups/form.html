@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Groupe</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/students}">Étudiants</a>
+        <a th:href="@{/teachers}">Enseignants</a>
+        <a th:href="@{/groups}">Groupes</a>
+        <a th:href="@{/modules}">Modules</a>
+        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:href="@{/evaluations}">Évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+</header>
+<main class="page narrow">
+    <section class="card">
+        <h2 th:text="${groupClass.id == null} ? 'Nouveau groupe' : 'Modifier groupe'"></h2>
+        <form th:action="${groupClass.id == null} ? @{/groups} : @{'/groups/' + ${groupClass.id}}" method="post" th:object="${groupClass}">
+            <div class="form-grid">
+                <label>Nom
+                    <input th:field="*{name}" required>
+                </label>
+                <label>Niveau
+                    <input th:field="*{level}" required>
+                </label>
+                <label>Filière
+                    <input th:field="*{fieldOfStudy}" required>
+                </label>
+            </div>
+            <button class="button" type="submit">Enregistrer</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

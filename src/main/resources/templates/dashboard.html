@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/students}">Étudiants</a>
+        <a th:href="@{/teachers}">Enseignants</a>
+        <a th:href="@{/groups}">Groupes</a>
+        <a th:href="@{/modules}">Modules</a>
+        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:href="@{/evaluations}">Évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+    </header>
+
+<main class="page">
+    <section class="hero">
+        <div>
+            <p class="eyebrow">Pilotage académique</p>
+            <h1>Organisez enseignants, groupes et séances sans conflit.</h1>
+            <p class="sub">Vue rapide sur les modules, groupes et créneaux programmés. Planification avec détection automatique des conflits.</p>
+            <div class="hero-actions">
+                <a class="button" th:href="@{/sessions}">Planifier une séance</a>
+                <a class="button ghost" th:href="@{/modules}">Gérer les modules</a>
+            </div>
+        </div>
+        <div class="hero-card">
+            <p>Prochaines séances</p>
+            <div th:if="${#lists.isEmpty(sessions)}" class="muted">Aucune séance planifiée</div>
+            <div th:each="s : ${sessions}" class="pill-row">
+                <div class="pill">
+                    <span class="dot"></span>
+                    <strong th:text="${s.moduleCourse.code} + ' • ' + ${s.groupClass.name}"></strong>
+                    <span th:text="${#temporals.format(s.startTime, 'dd/MM HH:mm')} + ' - ' + ${#temporals.format(s.endTime, 'HH:mm')}"></span>
+                    <span class="room" th:text="${s.room}"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="grid">
+        <div class="card stat">
+            <p class="label">Enseignants</p>
+            <h2 th:text="${teachersCount}">0</h2>
+            <p class="muted">Comptes enseignants</p>
+        </div>
+        <div class="card stat">
+            <p class="label">Étudiants</p>
+            <h2 th:text="${studentsCount}">0</h2>
+            <p class="muted">Étudiants enregistrés</p>
+        </div>
+        <div class="card stat">
+            <p class="label">Modules</p>
+            <h2 th:text="${modulesCount}">0</h2>
+            <p class="muted">Avec responsable & groupes</p>
+        </div>
+        <div class="card stat">
+            <p class="label">Groupes</p>
+            <h2 th:text="${groupsCount}">0</h2>
+            <p class="muted">Groupes TD/TP</p>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Modules</p>
+                <h3>Liste rapide</h3>
+            </div>
+            <a class="button ghost" th:href="@{/modules}">Voir tous</a>
+        </div>
+        <div class="list-grid">
+            <div th:each="m : ${modules}" class="list-item">
+                <div>
+                    <div class="title" th:text="${m.code} + ' — ' + ${m.name}"></div>
+                    <div class="muted" th:text="'Filière ' + ${m.fieldOfStudy} + ' · Semestre ' + ${m.semester}"></div>
+                </div>
+                <div class="tags">
+                    <span class="tag" th:text="${m.responsibleTeacher != null ? m.responsibleTeacher.lastName : 'Responsable ?'}"></span>
+                    <span class="tag" th:each="g : ${m.groups}" th:text="${g.name}"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Groupes</p>
+                <h3>Groupes et niveaux</h3>
+            </div>
+            <a class="button ghost" th:href="@{/groups}">Gérer</a>
+        </div>
+        <div class="list-grid three">
+            <div class="list-item" th:each="g : ${groups}">
+                <div class="title" th:text="${g.name}"></div>
+                <div class="muted" th:text="${g.level} + ' · ' + ${g.fieldOfStudy}"></div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
