@@ -10,11 +10,11 @@
     <div class="brand">Campus Planner</div>
     <nav>
         <a th:href="@{/}">Accueil</a>
-        <a th:href="@{/students}">Étudiants</a>
-        <a th:href="@{/teachers}">Enseignants</a>
-        <a th:href="@{/groups}">Groupes</a>
-        <a th:href="@{/modules}">Modules</a>
-        <a th:href="@{/sessions}">Emploi du temps</a>
+        <a th:if="${currentUser != null && currentUser.role.name() == 'ADMIN'}" th:href="@{/students}">Étudiants</a>
+        <a th:if="${currentUser != null && currentUser.role.name() == 'ADMIN'}" th:href="@{/teachers}">Enseignants</a>
+        <a th:if="${currentUser != null && currentUser.role.name() == 'ADMIN'}" th:href="@{/groups}">Groupes</a>
+        <a th:href="${currentUser != null && currentUser.role.name() == 'ADMIN' ? @{/modules} : @{/modules/my}}">Modules</a>
+        <a th:href="${currentUser != null && currentUser.role.name() == 'ADMIN' ? @{/sessions} : @{/sessions/my}}">Emploi du temps</a>
         <a th:href="@{/evaluations}">Évaluations</a>
     </nav>
     <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
@@ -29,6 +29,7 @@
             <p class="muted">Fonctionnalité bonus.</p>
         </div>
         <div th:if="${error}" class="alert" th:text="${error}"></div>
+        <div th:if="${profileMissing}" class="alert">Profil enseignant introuvable. Merci de contacter l'administrateur.</div>
         <form th:action="@{/evaluations}" method="post" th:object="${evaluationRequest}">
             <div class="form-grid">
                 <label>Étudiant
