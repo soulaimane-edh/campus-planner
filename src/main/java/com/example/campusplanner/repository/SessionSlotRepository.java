@@ -10,4 +10,6 @@ public interface SessionSlotRepository extends JpaRepository<SessionSlot, Long> 
     List<SessionSlot> findByRoomAndStartTimeLessThanAndEndTimeGreaterThan(String room, LocalDateTime end, LocalDateTime start);
     List<SessionSlot> findByTeacherIdAndStartTimeLessThanAndEndTimeGreaterThan(Long teacherId, LocalDateTime end, LocalDateTime start);
     List<SessionSlot> findByGroupClassIdAndStartTimeLessThanAndEndTimeGreaterThan(Long groupId, LocalDateTime end, LocalDateTime start);
+    List<SessionSlot> findByTeacherIdOrderByStartTimeAsc(Long teacherId);
+    List<SessionSlot> findByGroupClassIdOrderByStartTimeAsc(Long groupId);
 }

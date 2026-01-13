@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord étudiant</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Campus Planner</div>
+    <nav>
+        <a th:href="@{/}">Accueil</a>
+        <a th:href="@{/modules/my}">Mes modules</a>
+        <a th:href="@{/sessions/my}">Mon emploi du temps</a>
+        <a th:href="@{/evaluations/my}">Mes évaluations</a>
+    </nav>
+    <a class="button ghost" th:href="@{/logout}">Déconnexion</a>
+</header>
+
+<main class="page">
+    <section class="hero">
+        <div>
+            <p class="eyebrow">Espace étudiant</p>
+            <h1 th:text="${student != null ? 'Bonjour ' + student.firstName : 'Bonjour'}"></h1>
+            <p class="sub">Consultez vos modules, votre emploi du temps et vos évaluations.</p>
+            <div class="hero-actions">
+                <a class="button" th:href="@{/sessions/my}">Voir l'emploi du temps</a>
+                <a class="button ghost" th:href="@{/evaluations/my}">Mes notes</a>
+            </div>
+            <div th:if="${profileMissing}" class="alert">Profil étudiant incomplet. Merci de contacter l'administrateur.</div>
+        </div>
+        <div class="hero-card">
+            <p>Prochaines séances</p>
+            <div th:if="${#lists.isEmpty(sessions)}" class="muted">Aucune séance planifiée</div>
+            <div th:each="s : ${sessions}" class="pill-row">
+                <div class="pill">
+                    <span class="dot"></span>
+                    <strong th:text="${s.moduleCourse.code} + ' • ' + ${s.groupClass.name}"></strong>
+                    <span th:text="${#temporals.format(s.startTime, 'dd/MM HH:mm')} + ' - ' + ${#temporals.format(s.endTime, 'HH:mm')}"></span>
+                    <span class="room" th:text="${s.room}"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Modules</p>
+                <h3>Modules de votre groupe</h3>
+            </div>
+            <a class="button ghost" th:href="@{/modules/my}">Tout voir</a>
+        </div>
+        <div class="list-grid">
+            <div th:each="m : ${modules}" class="list-item">
+                <div>
+                    <div class="title" th:text="${m.code} + ' — ' + ${m.name}"></div>
+                    <div class="muted" th:text="'Filière ' + ${m.fieldOfStudy} + ' · Semestre ' + ${m.semester}"></div>
+                </div>
+                <div class="tags">
+                    <span class="tag" th:text="${m.responsibleTeacher != null ? m.responsibleTeacher.lastName : 'Responsable ?'}"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="section-head">
+            <div>
+                <p class="label">Évaluations</p>
+                <h3>Vos dernières notes</h3>
+            </div>
+            <a class="button ghost" th:href="@{/evaluations/my}">Détails</a>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Module</th>
+                <th>Type</th>
+                <th>Note</th>
+                <th>Date</th>
+                <th>Remarques</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(evaluations)}">
+                <td colspan="5" class="muted">Aucune évaluation disponible.</td>
+            </tr>
+            <tr th:each="e : ${evaluations}">
+                <td th:text="${e.moduleCourse.code}"></td>
+                <td th:text="${e.assessmentType}"></td>
+                <td th:text="${e.grade}"></td>
+                <td th:text="${#temporals.format(e.evaluationDate, 'dd/MM/yyyy')}"></td>
+                <td th:text="${e.remarks}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
